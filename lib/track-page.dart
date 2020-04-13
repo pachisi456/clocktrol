@@ -8,7 +8,7 @@ class TrackPage extends StatefulWidget {
 
 class _TrackPageState extends State<TrackPage> {
   DateTime _start;
-  Duration _workingSince;
+  String _workingSince;
 
   @override
   Widget build(BuildContext context) {
@@ -57,23 +57,37 @@ class _TrackPageState extends State<TrackPage> {
   Widget _buildStarted() {
     return Column(children: <Widget>[
       Text(
-        'Workday started at ${_start.hour.toString()}:${_start.minute.toString()}',
+        'Workday started at ${_prependZero(_start.hour.toString())}:${_prependZero(_start.minute.toString())}',
         style: TextStyle(fontSize: 20),
       ),
-      Text('$_workingSince')
+      Text(
+        '$_workingSince\nHours in...',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20),
+      )
     ]);
   }
-  
+
   void _startWorkday() {
     setState(() {
       _start = DateTime.now();
     });
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _setWorkingSince());
+    Timer.periodic(Duration(minutes: 1), (Timer t) => _setWorkingSince());
   }
-  
+
   void _setWorkingSince() {
     setState(() {
-     _workingSince = DateTime.now().difference(_start);
+      // _start = DateTime.now()
+          // .subtract(Duration(hours: 2, minutes: 2, seconds: 5)); // TODO Remove.
+      var duration = DateTime.now().difference(_start);
+      var hours = duration.inHours.toString();
+      var minutes = (duration.inMinutes % 60).toString();
+      _workingSince = _prependZero(hours) + ':' + _prependZero(minutes);
     });
+  }
+
+  String _prependZero(String val) {
+    if (val.length <= 1) return '0' + val;
+    return val;
   }
 }
