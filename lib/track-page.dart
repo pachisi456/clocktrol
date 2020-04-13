@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class TrackPage extends StatefulWidget {
   @override
@@ -7,6 +8,7 @@ class TrackPage extends StatefulWidget {
 
 class _TrackPageState extends State<TrackPage> {
   DateTime _start;
+  Duration _workingSince;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +44,7 @@ class _TrackPageState extends State<TrackPage> {
       ),
       RaisedButton(
         onPressed: () {
-          setState(() {
-            _start = DateTime.now();
-          });
+          _startWorkday();
         },
         child: Text(
           'Start workday now',
@@ -55,7 +55,25 @@ class _TrackPageState extends State<TrackPage> {
   }
 
   Widget _buildStarted() {
-    return Text(
-        'Workday started at ${_start.hour.toString()}:${_start.minute.toString()}');
+    return Column(children: <Widget>[
+      Text(
+        'Workday started at ${_start.hour.toString()}:${_start.minute.toString()}',
+        style: TextStyle(fontSize: 20),
+      ),
+      Text('$_workingSince')
+    ]);
+  }
+  
+  void _startWorkday() {
+    setState(() {
+      _start = DateTime.now();
+    });
+    Timer.periodic(Duration(seconds: 1), (Timer t) => _setWorkingSince());
+  }
+  
+  void _setWorkingSince() {
+    setState(() {
+     _workingSince = DateTime.now().difference(_start);
+    });
   }
 }
