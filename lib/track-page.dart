@@ -1,5 +1,8 @@
+import 'package:clocktrol/time-display.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'workday.dart';
 
 class TrackPage extends StatefulWidget {
   @override
@@ -7,8 +10,7 @@ class TrackPage extends StatefulWidget {
 }
 
 class _TrackPageState extends State<TrackPage> {
-  DateTime _start;
-  String _workingSince;
+  Workday _workday;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class _TrackPageState extends State<TrackPage> {
   }
 
   Widget _buildBody() {
-    if (_start == null) {
+    if (_workday == null) {
       return _buildPristine();
     } else {
       return _buildStarted();
@@ -55,39 +57,17 @@ class _TrackPageState extends State<TrackPage> {
   }
 
   Widget _buildStarted() {
-    return Column(children: <Widget>[
-      Text(
-        'Workday started at ${_prependZero(_start.hour.toString())}:${_prependZero(_start.minute.toString())}',
-        style: TextStyle(fontSize: 20),
-      ),
-      Text(
-        '$_workingSince\nHours in...',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20),
-      )
-    ]);
+    return Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[TimeDisplay('Started at', _workday.start)]),
+    );
   }
 
   void _startWorkday() {
     setState(() {
-      _start = DateTime.now();
+      _workday = new Workday(DateTime.now());
     });
-    Timer.periodic(Duration(minutes: 1), (Timer t) => _setWorkingSince());
-  }
-
-  void _setWorkingSince() {
-    setState(() {
-      // _start = DateTime.now()
-          // .subtract(Duration(hours: 2, minutes: 2, seconds: 5)); // TODO Remove.
-      var duration = DateTime.now().difference(_start);
-      var hours = duration.inHours.toString();
-      var minutes = (duration.inMinutes % 60).toString();
-      _workingSince = _prependZero(hours) + ':' + _prependZero(minutes);
-    });
-  }
-
-  String _prependZero(String val) {
-    if (val.length <= 1) return '0' + val;
-    return val;
+    // Timer.periodic(Duration(minutes: 1), (Timer t) => _setWorkingSince());
   }
 }
