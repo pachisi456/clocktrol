@@ -22,7 +22,7 @@ class Workday {
   }
   
   Duration get workedTime => totalWorkdayDuration - totalBreaksDuration;
-  Duration get unproductiveTime => workedTime - trackedTime;
+  Duration get unproductiveTime => trackedTime == null ? workedTime : workedTime - trackedTime;
 }
 
 class Break {

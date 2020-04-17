@@ -61,22 +61,26 @@ class _TrackPageState extends State<TrackPage> {
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TimeDisplay('Start', _workday.start),
-              TimeDisplay('Breaks', _workday.totalBreaksDuration),
-              TimeDisplay('End', _workday.end)
-            ]),
+        Row( // TODO Make this a widget, as same thing is used below.
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            TimeDisplay('Start', _workday.start),
+            TimeDisplay('Breaks', _workday.totalBreaksDuration),
+            TimeDisplay('End', _workday.end)
+          ],
+        ),
         SizedBox(height: 50),
         TimeDisplay('Hours worked', _workday.workedTime),
+        SizedBox(height: 50),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TimeDisplay('tracked time', _workday.trackedTime),
-            // TimeDisplay('unproductive time', _workday.unproductiveTime)
+            TimeDisplay('unproductive time', _workday.unproductiveTime)
           ],
-        )
+        ),
       ],
     ));
   }

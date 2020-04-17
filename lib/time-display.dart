@@ -12,26 +12,30 @@ class TimeDisplay extends StatelessWidget {
       _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
       _duration = timeOrDuration;
-    } else {
-      // throw ArgumentError(
-      //     'timeOrDuration parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
+    } else if (timeOrDuration != null) {
+      throw ArgumentError(
+          'timeOrDuration parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          _title,
-          style: TextStyle(fontSize: 20, color: Colors.grey),
-        ),
-        Text(
-          _getString(),
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        )
-      ],
-    );
+    return Container(
+        width: 120,
+        alignment: Alignment.center,
+        child: Column(
+          children: <Widget>[
+            Text(
+              _title,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, color: Colors.grey),
+            ),
+            Text(
+              _getString(),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            )
+          ],
+        ));
   }
 
   String _getString() {
