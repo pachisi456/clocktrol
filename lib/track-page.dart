@@ -58,10 +58,27 @@ class _TrackPageState extends State<TrackPage> {
 
   Widget _buildStarted() {
     return Center(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[TimeDisplay('Started at', _workday.start)]),
-    );
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              TimeDisplay('Start', _workday.start),
+              TimeDisplay('Breaks', _workday.totalBreaksDuration),
+              TimeDisplay('End', _workday.end)
+            ]),
+        SizedBox(height: 50),
+        TimeDisplay('Hours worked', _workday.workedTime),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            TimeDisplay('tracked time', _workday.trackedTime),
+            // TimeDisplay('unproductive time', _workday.unproductiveTime)
+          ],
+        )
+      ],
+    ));
   }
 
   void _startWorkday() {

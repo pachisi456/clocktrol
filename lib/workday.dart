@@ -5,11 +5,16 @@ class Workday {
 
   Workday(this.start);
 
-  Duration get totalWorkdayDuration => end.difference(start);
+  Duration get totalWorkdayDuration {
+    if (end == null) {
+      return Duration();
+    }
+    return end.difference(start);
+  }
 
   Duration get totalBreaksDuration {
     var duration = Duration();
-    if (breaks.length == 0) {
+    if (breaks == null || breaks.length == 0) {
       return duration;
     }
     breaks.map((Break brk) => duration += brk.duration);

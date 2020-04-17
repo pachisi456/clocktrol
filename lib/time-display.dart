@@ -7,14 +7,14 @@ class TimeDisplay extends StatelessWidget {
   Duration _duration;
 
   TimeDisplay(String title, dynamic timeOrDuration) {
-    this._title = title;
+    _title = title;
     if (timeOrDuration is DateTime) {
-      this._time = timeOrDuration;
+      _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
-      this._duration = timeOrDuration;
+      _duration = timeOrDuration;
     } else {
-      throw ArgumentError(
-          '`timeOrDuration` parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
+      // throw ArgumentError(
+      //     'timeOrDuration parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
     }
   }
 
@@ -40,7 +40,7 @@ class TimeDisplay extends StatelessWidget {
     } else if (_duration != null) {
       // TODO implement duration string.
     }
-    return '00:00';
+    return '--:--';
   }
 
   String _prependZero(String val) {
