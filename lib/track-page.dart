@@ -62,7 +62,8 @@ class _TrackPageState extends State<TrackPage> {
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row( // TODO Make this a widget, as same thing is used below.
+        Row(
+          // TODO Make this a widget, as same thing is used below.
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
@@ -72,7 +73,7 @@ class _TrackPageState extends State<TrackPage> {
           ],
         ),
         SizedBox(height: 50),
-        TimeDisplay('Hours worked', _workday.workedTime),
+        TimeDisplay('Hours worked', _workday.workedTime, false),
         SizedBox(height: 50),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

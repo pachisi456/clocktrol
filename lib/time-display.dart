@@ -5,8 +5,9 @@ class TimeDisplay extends StatelessWidget {
   final String _title;
   DateTime _time;
   Duration _duration;
+  bool _small;
 
-  TimeDisplay(this._title, dynamic timeOrDuration) {
+  TimeDisplay(this._title, dynamic timeOrDuration, [bool small]) {
     if (timeOrDuration is DateTime) {
       _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
@@ -15,27 +16,35 @@ class TimeDisplay extends StatelessWidget {
       throw ArgumentError(
           'timeOrDuration parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
     }
+    _small = small == null ? true : small;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 120,
+        width: _small ? 120 : 300,
         alignment: Alignment.center,
         child: Column(
           children: <Widget>[
             Container(
               height: 50,
+              width: _small ? 120 : 250,
               alignment: Alignment.center,
               child: Text(
                 _title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: _small ? 20 : 40,
+                  color: Colors.grey,
+                ),
               ),
             ),
             Text(
               _getString(),
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: _small ? 28 : 56,
+                fontWeight: FontWeight.bold,
+              ),
             )
           ],
         ));
