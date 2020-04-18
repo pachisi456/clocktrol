@@ -7,7 +7,7 @@ class Workday {
 
   Duration get totalWorkdayDuration {
     if (end == null) {
-      return Duration();
+      return DateTime.now().difference(start);
     }
     return end.difference(start);
   }

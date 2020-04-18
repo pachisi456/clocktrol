@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TimeDisplay extends StatelessWidget {
-  String _title;
+  final String _title;
   DateTime _time;
   Duration _duration;
 
-  TimeDisplay(String title, dynamic timeOrDuration) {
-    _title = title;
+  TimeDisplay(this._title, dynamic timeOrDuration) {
     if (timeOrDuration is DateTime) {
       _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
@@ -46,7 +45,7 @@ class TimeDisplay extends StatelessWidget {
     if (_time != null) {
       return '${_prependZero(_time.hour.toString())}:${_prependZero(_time.minute.toString())}';
     } else if (_duration != null) {
-      return '${_prependZero(_duration.inHours.toString())}:${_prependZero((_duration.inMinutes % 60).toString())}';
+      return '${_duration.inHours.toString()}:${_prependZero((_duration.inMinutes % 60).toString())}';
     }
     return '--:--';
   }

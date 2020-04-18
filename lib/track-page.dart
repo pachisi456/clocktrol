@@ -32,6 +32,7 @@ class _TrackPageState extends State<TrackPage> {
     }
   }
 
+  // TODO Probably outsource to its own page/screen.
   Widget _buildPristine() {
     return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       Padding(
@@ -89,6 +90,6 @@ class _TrackPageState extends State<TrackPage> {
     setState(() {
       _workday = new Workday(DateTime.now());
     });
-    // Timer.periodic(Duration(minutes: 1), (Timer t) => _setWorkingSince());
+    Timer.periodic(Duration(minutes: 1), (Timer t) => setState(() {}));
   }
 }
