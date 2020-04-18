@@ -1,6 +1,6 @@
 class Workday {
   DateTime start, end;
-  List<Break> breaks;
+  List<Break> breaks = [];
   Duration trackedTime = Duration();
 
   Workday(this.start);
@@ -14,21 +14,23 @@ class Workday {
 
   Duration get totalBreaksDuration {
     var duration = Duration();
-    if (breaks == null || breaks.length == 0) {
+    if (breaks.length == 0) {
       return duration;
     }
-    breaks.map((Break brk) => duration += brk.duration);
+    breaks.forEach((Break brk) => duration += brk.duration);
     return duration;
   }
-  
+
   Duration get workedTime => totalWorkdayDuration - totalBreaksDuration;
-  Duration get unproductiveTime => trackedTime == null ? workedTime : workedTime - trackedTime;
+  Duration get unproductiveTime =>
+      trackedTime == null ? workedTime : workedTime - trackedTime;
+  bool get isPausedOrEnded => end == null ? false : true;
 }
 
 class Break {
   DateTime start, end;
 
-  Break(this.start);
+  Break(this.start, this.end);
 
   Duration get duration => end.difference(start);
 }
