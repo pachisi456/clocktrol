@@ -18,8 +18,33 @@ class _TrackPageState extends State<TrackPage> {
       appBar: AppBar(
         title: Text('Clocktrol'),
       ),
-      body: Center(
-        child: _buildBody(),
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/hourglass.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0),
+                  Colors.black.withOpacity(0.5)
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: _buildBody(),
+          ),
+        ],
       ),
     );
   }
@@ -81,9 +106,9 @@ class _TrackPageState extends State<TrackPage> {
             onPressed: () {
               _stopOrContinueWorkday();
             },
-            color: Colors.red,
+            color: Theme.of(context).primaryColorDark,
             child: Text(
-              _workday.isPausedOrEnded ? 'Continue working' : 'Take a break',
+              _workday.isPausedOrEnded ? 'Continue working' : 'Stop working',
               style: TextStyle(fontSize: 26),
             ),
           ),
