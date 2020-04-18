@@ -25,10 +25,14 @@ class TimeDisplay extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: <Widget>[
-            Text(
-              _title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+            Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text(
+                _title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, color: Colors.grey),
+              ),
             ),
             Text(
               _getString(),
@@ -42,7 +46,7 @@ class TimeDisplay extends StatelessWidget {
     if (_time != null) {
       return '${_prependZero(_time.hour.toString())}:${_prependZero(_time.minute.toString())}';
     } else if (_duration != null) {
-      // TODO implement duration string.
+      return '${_prependZero(_duration.inHours.toString())}:${_prependZero((_duration.inMinutes % 60).toString())}';
     }
     return '--:--';
   }

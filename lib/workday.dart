@@ -1,7 +1,7 @@
 class Workday {
   DateTime start, end;
   List<Break> breaks;
-  Duration trackedTime;
+  Duration trackedTime = Duration();
 
   Workday(this.start);
 
