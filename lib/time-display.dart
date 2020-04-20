@@ -24,10 +24,6 @@ class TimeDisplay extends StatelessWidget {
     return Container(
         width: _small ? 117 : 300,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(15),
-        ),
         padding: EdgeInsets.only(bottom: 5),
         child: Column(
           children: <Widget>[
