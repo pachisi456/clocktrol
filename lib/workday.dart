@@ -39,7 +39,7 @@ class Workday {
       trackedTime == null ? workedTime : workedTime - trackedTime;
   bool get isPausedOrEnded => end == null ? false : true;
 
-  fetchClockify() async {
+  void fetchClockify() async {
     trackedTime = await clockify.getTodaysHours();
   }
 }
