@@ -1,9 +1,22 @@
+import 'dart:async';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:clocktrol/clockify.dart';
+
 class Workday {
   DateTime start, end;
   List<Break> breaks = [];
+  final clockify = DotEnv().env['CLOCKIFY_API_KEY'] != null
+      ? Clockify(DotEnv().env['CLOCKIFY_API_KEY'])
+      : null;
   Duration trackedTime = Duration();
 
-  Workday(this.start);
+  Workday(this.start) {
+    if (clockify != null) {
+      fetchClockify();
+      Timer.periodic(Duration(minutes: 1), (Timer t) => fetchClockify());
+    }
+  }
 
   Duration get totalWorkdayDuration {
     if (end == null) {
@@ -25,6 +38,10 @@ class Workday {
   Duration get unproductiveTime =>
       trackedTime == null ? workedTime : workedTime - trackedTime;
   bool get isPausedOrEnded => end == null ? false : true;
+
+  fetchClockify() async {
+    trackedTime = await clockify.getTodaysHours();
+  }
 }
 
 class Break {
