@@ -14,7 +14,7 @@ class Workday {
   Workday(this.start) {
     if (clockify != null) {
       fetchClockify();
-      Timer.periodic(Duration(minutes: 1), (Timer t) => fetchClockify());
+      Timer.periodic(Duration(seconds: 2), (Timer t) => fetchClockify());
     }
   }
 
@@ -35,9 +35,14 @@ class Workday {
   }
 
   Duration get workedTime => totalWorkdayDuration - totalBreaksDuration;
-  Duration get unproductiveTime =>
-      trackedTime == null ? workedTime : workedTime - trackedTime;
   bool get isPausedOrEnded => end == null ? false : true;
+
+  Duration get unproductiveTime {
+    if (trackedTime == Duration()) {
+      return workedTime;
+    }
+    return trackedTime <= workedTime ? workedTime - trackedTime : Duration();
+  }
 
   void fetchClockify() async {
     trackedTime = await clockify.getTodaysHours();

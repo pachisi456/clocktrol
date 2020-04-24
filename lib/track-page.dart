@@ -100,17 +100,10 @@ class _TrackPageState extends State<TrackPage> {
   }
 
   void _startWorkday() {
-    // Instant initial setup.
     setState(() {
       _workday = Workday(DateTime.now());
     });
-
-    // Rebuild as soon as clockify data is fetched.
-    // TODO Currently this is a race condition and might fail with slow connections.
-    Timer(Duration(seconds: 1), () => setState(() {}));
-
-    // Then refresh every minute.
-    Timer.periodic(Duration(minutes: 1), (Timer t) => setState(() {}));
+    Timer.periodic(Duration(seconds: 2), (Timer t) => setState(() {}));
   }
 
   void _stopOrContinueWorkday() {
