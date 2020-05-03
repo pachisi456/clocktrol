@@ -1,8 +1,9 @@
-import 'package:clocktrol/time-display.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:clocktrol/time-display.dart';
 import 'workday.dart';
+import 'firebase.dart';
 
 class TrackPage extends StatefulWidget {
   @override
@@ -11,6 +12,14 @@ class TrackPage extends StatefulWidget {
 
 class _TrackPageState extends State<TrackPage> {
   Workday _workday;
+
+  @override
+  void initState() {
+    getToday().then((today) => setState(() {
+          _workday = today;
+        }));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,21 +110,25 @@ class _TrackPageState extends State<TrackPage> {
 
   void _startWorkday() {
     setState(() {
-      _workday = Workday(DateTime.now());
+      _workday = startNewDay();
     });
-    Timer.periodic(Duration(seconds: 2), (Timer t) => setState(() {}));
+    Timer.periodic(Duration(seconds: 2), (Timer t) => _updateData());
   }
 
   void _stopOrContinueWorkday() {
-    setState(() {
-      if (!_workday.isPausedOrEnded) {
-        // Assume workday is ended.
-        _workday.end = DateTime.now();
-      } else {
-        // Add break, from end to now and reset end.
-        _workday.breaks.add(Break(_workday.end, DateTime.now()));
-        _workday.end = null;
-      }
-    });
+    if (!_workday.isPausedOrEnded) {
+      // Assume workday is ended.
+      _workday.end = DateTime.now();
+    } else {
+      // Add break, from end to now and reset end.
+      _workday.breaks.add(Break(_workday.end, DateTime.now()));
+      _workday.end = null;
+    }
+    _updateData();
+  }
+
+  void _updateData() {
+    updateToday(_workday);
+    setState(() {});
   }
 }
