@@ -26,7 +26,7 @@ void main() {
     });
 
     Workday workday = parseWorkday(ds);
-    expect(workday.start, DateTime(2020, 5, 2, 13, 23, 7));
+    expect(workday.start.toUtc(), DateTime(2020, 5, 2, 13, 23, 7).toUtc());
   });
 
   test('Ended workday with breaks and tracked time should be parsed correctly',
@@ -48,13 +48,13 @@ void main() {
     });
 
     Workday workday = parseWorkday(ds);
-    expect(workday.start, DateTime(2020, 5, 3, 9));
+    expect(workday.start.toUtc(), DateTime(2020, 5, 3, 9).toUtc());
     expect(workday.trackedTime.inMinutes, 90);
-    expect(workday.breaks[0].start, DateTime(2020, 5, 3, 10));
-    expect(workday.breaks[0].end, DateTime(2020, 5, 3, 11));
-    expect(workday.breaks[1].start, DateTime(2020, 5, 3, 12));
-    expect(workday.breaks[1].end, DateTime(2020, 5, 3, 13));
-    expect(workday.end, DateTime(2020, 5, 3, 17));
+    expect(workday.breaks[0].start.toUtc(), DateTime(2020, 5, 3, 10).toUtc());
+    expect(workday.breaks[0].end.toUtc(), DateTime(2020, 5, 3, 11).toUtc());
+    expect(workday.breaks[1].start.toUtc(), DateTime(2020, 5, 3, 12).toUtc());
+    expect(workday.breaks[1].end.toUtc(), DateTime(2020, 5, 3, 13).toUtc());
+    expect(workday.end.toUtc(), DateTime(2020, 5, 3, 17).toUtc());
     expect(workday.totalWorkdayDuration, Duration(hours: 8));
     expect(workday.totalBreaksDuration, Duration(hours: 2));
     expect(workday.workedTime, Duration(hours: 6));
