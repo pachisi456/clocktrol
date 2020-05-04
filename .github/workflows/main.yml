@@ -1,0 +1,14 @@
+name: Flutter test
+on: push
+
+jobs:
+  test:
+    name: Install dependencies and test flutter app
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - run: flutter pub get
+    - run: flutter test
