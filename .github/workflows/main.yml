@@ -11,4 +11,5 @@ jobs:
       with:
         channel: 'stable'
     - run: flutter pub get
+    - run: touch .env
     - run: flutter test
