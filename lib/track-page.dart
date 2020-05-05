@@ -15,9 +15,11 @@ class _TrackPageState extends State<TrackPage> {
 
   @override
   void initState() {
-    getToday().then((today) => setState(() {
-          _workday = today;
-        }));
+    getToday().then((Workday today) {
+      if (today != null) {
+        _setUpWorkday(today);
+      }
+    });
     super.initState();
   }
 
@@ -57,7 +59,7 @@ class _TrackPageState extends State<TrackPage> {
         ),
         RaisedButton(
           onPressed: () {
-            _startWorkday();
+            _setUpWorkday();
           },
           child: Text(
             'Start workday now',
@@ -108,9 +110,13 @@ class _TrackPageState extends State<TrackPage> {
     );
   }
 
-  void _startWorkday() {
+  void _setUpWorkday([Workday today]) {
     setState(() {
-      _workday = startNewDay();
+      if (today == null) {
+        _workday = startNewDay();
+      } else {
+        _workday = today;
+      }
     });
     Timer.periodic(Duration(seconds: 2), (Timer t) => _updateData());
   }
