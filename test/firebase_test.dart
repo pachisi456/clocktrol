@@ -21,40 +21,48 @@ void main() {
   });
 
   test('Started workday should be parsed correctly', () {
+    const start = 1588518000;
     final ds = DocumentSnapshotMock('', {
-      'start': Timestamp.fromMicrosecondsSinceEpoch(1588418587140000),
+      'start': Timestamp.fromMillisecondsSinceEpoch(start),
     });
 
     Workday workday = parseWorkday(ds);
-    expect(workday.start.toUtc(), DateTime(2020, 5, 2, 13, 23, 7).toUtc());
+    expect(workday.start.millisecondsSinceEpoch, start);
   });
 
   test('Ended workday with breaks and tracked time should be parsed correctly',
       () {
+    const start = 1588489200000;
+    const breakOneStart = 1588492800000;
+    const breakOneEnd = 1588496400000;
+    const breakTwoStart = 1588500000000;
+    const breakTwoEnd = 1588503600000;
+    const end = 1588518000000;
+
     final ds = DocumentSnapshotMock('', {
-      'start': Timestamp.fromMillisecondsSinceEpoch(1588489200000),
+      'start': Timestamp.fromMillisecondsSinceEpoch(start),
       'trackedTime': Duration(hours: 1, minutes: 30).inSeconds,
       'breaks': [
         {
-          'start': Timestamp.fromMillisecondsSinceEpoch(1588492800000),
-          'end': Timestamp.fromMillisecondsSinceEpoch(1588496400000)
+          'start': Timestamp.fromMillisecondsSinceEpoch(breakOneStart),
+          'end': Timestamp.fromMillisecondsSinceEpoch(breakOneEnd)
         },
         {
-          'start': Timestamp.fromMillisecondsSinceEpoch(1588500000000),
-          'end': Timestamp.fromMillisecondsSinceEpoch(1588503600000)
+          'start': Timestamp.fromMillisecondsSinceEpoch(breakTwoStart),
+          'end': Timestamp.fromMillisecondsSinceEpoch(breakTwoEnd)
         }
       ],
-      'end': Timestamp.fromMillisecondsSinceEpoch(1588518000000)
+      'end': Timestamp.fromMillisecondsSinceEpoch(end)
     });
 
     Workday workday = parseWorkday(ds);
-    expect(workday.start.toUtc(), DateTime(2020, 5, 3, 9).toUtc());
+    expect(workday.start.millisecondsSinceEpoch, start);
     expect(workday.trackedTime.inMinutes, 90);
-    expect(workday.breaks[0].start.toUtc(), DateTime(2020, 5, 3, 10).toUtc());
-    expect(workday.breaks[0].end.toUtc(), DateTime(2020, 5, 3, 11).toUtc());
-    expect(workday.breaks[1].start.toUtc(), DateTime(2020, 5, 3, 12).toUtc());
-    expect(workday.breaks[1].end.toUtc(), DateTime(2020, 5, 3, 13).toUtc());
-    expect(workday.end.toUtc(), DateTime(2020, 5, 3, 17).toUtc());
+    expect(workday.breaks[0].start.millisecondsSinceEpoch, breakOneStart);
+    expect(workday.breaks[0].end.millisecondsSinceEpoch, breakOneEnd);
+    expect(workday.breaks[1].start.millisecondsSinceEpoch, breakTwoStart);
+    expect(workday.breaks[1].end.millisecondsSinceEpoch, breakTwoEnd);
+    expect(workday.end.millisecondsSinceEpoch, end);
     expect(workday.totalWorkdayDuration, Duration(hours: 8));
     expect(workday.totalBreaksDuration, Duration(hours: 2));
     expect(workday.workedTime, Duration(hours: 6));
