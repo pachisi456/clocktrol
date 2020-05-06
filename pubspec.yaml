@@ -17,6 +17,8 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  cloud_firestore: ^0.13.5
+  firebase_core: ^0.4.4+3
   flutter:
     sdk: flutter
   flutter_dotenv: ^2.1.0
@@ -30,6 +32,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^4.1.1
 
 
 # For information on the generic Dart part of this file, see the
