@@ -25,17 +25,6 @@ class _TrackPageState extends State<TrackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Clocktrol'),
-      ),
-      body: Center(
-        child: _buildBody(),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
     if (_workday == null) {
       return _buildPristine();
     } else {

@@ -24,7 +24,53 @@ class MyApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: TrackPage(),
+      home: Clocktrol(),
+    );
+  }
+}
+
+class Clocktrol extends StatefulWidget {
+  Clocktrol({Key key}) : super(key: key);
+
+  @override
+  _ClocktrolState createState() => _ClocktrolState();
+}
+
+class _ClocktrolState extends State<Clocktrol> {
+  int _selectedIndex = 1;
+
+  void _onTabSwitch(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Clocktrol'),
+      ),
+      body: Center(
+        child: <Widget>[
+          Text('Hello World!'),
+          TrackPage(),
+        ].elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.reorder),
+            title: Text('History'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.today),
+            title: Text('Today'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onTabSwitch,
+      ),
     );
   }
 }
