@@ -38,11 +38,15 @@ void updateToday(Workday today) {
   });
 }
 
-/*
-List<Workday> getAll() {
-  // TODO
+// Get all documents and return them as list of Workdays.
+Future<List<Workday>> getAll() async {
+  QuerySnapshot all = await Firestore.instance
+      .collection(COLLECTION)
+      .getDocuments();
+  List<Workday> workdays =
+      all.documents.map((document) => parseWorkday(document)).toList();
+  return workdays;
 }
-*/
 
 // Parse data received from Firestore and return as Workday.
 @visibleForTesting

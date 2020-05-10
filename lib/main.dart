@@ -1,3 +1,6 @@
+import 'package:clocktrol/firebase.dart';
+import 'package:clocktrol/historyPage.dart';
+import 'package:clocktrol/workday.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -37,7 +40,14 @@ class Clocktrol extends StatefulWidget {
 }
 
 class _ClocktrolState extends State<Clocktrol> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
+  List<Workday> _history;
+
+  @override
+  void initState() {
+    getAll().then((all) => setState(() => _history = all));
+    super.initState();
+  }
 
   void _onTabSwitch(int index) {
     setState(() {
@@ -53,7 +63,9 @@ class _ClocktrolState extends State<Clocktrol> {
       ),
       body: Center(
         child: <Widget>[
-          Text('Hello World!'),
+          HistoryPage(
+            history: _history,
+          ),
           TrackPage(),
         ].elementAt(_selectedIndex),
       ),
