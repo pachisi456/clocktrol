@@ -70,7 +70,7 @@ class _TrackPageState extends State<TrackPage> {
             TimeDisplay('End', _workday.end)
           ]),
           SizedBox(height: 50),
-          TimeDisplay('Hours worked', _workday.workedTime, false),
+          TimeDisplay('Hours worked', _workday.workedTime, 'l'),
           SizedBox(height: 50),
           _timeDisplayRow(<TimeDisplay>[
             TimeDisplay('tracked time', _workday.trackedTime),
