@@ -1,4 +1,5 @@
 import 'package:clocktrol/time-display.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -14,13 +15,18 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(
+        indent: 15,
+        endIndent: 15,
+        thickness: 1,
+      ),
       itemCount: history.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.only(top: 10, right: 10, left: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
                 DateFormat.yMMMMEEEEd().format(history[index].start) +
@@ -39,7 +45,7 @@ class HistoryPage extends StatelessWidget {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TimeDisplay(
                       'Total Breaks', history[index].totalBreaksDuration, 's'),
