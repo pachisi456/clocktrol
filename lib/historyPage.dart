@@ -18,6 +18,7 @@ class HistoryPage extends StatelessWidget {
       itemCount: history.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -33,14 +34,18 @@ class HistoryPage extends StatelessWidget {
                     (history[index].totalWorkdayDuration.inMinutes % 60)
                         .toString() +
                     'h)',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   TimeDisplay(
-                      'Breaks', history[index].totalBreaksDuration, 's'),
+                      'Total Breaks', history[index].totalBreaksDuration, 's'),
                   TimeDisplay('Tracked Time', history[index].trackedTime, 's'),
-                  TimeDisplay('Unproductive Time',
-                      history[index].unproductiveTime, 's'),
+                  TimeDisplay(
+                      'Unprod. Time', history[index].unproductiveTime, 's'),
                   TimeDisplay('Worked Time', history[index].workedTime, 's'),
                 ],
               ),

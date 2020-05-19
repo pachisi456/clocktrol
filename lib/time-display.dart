@@ -22,20 +22,20 @@ class TimeDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: _size == 's' ? 90 : _size == 'm' ? 117 : 300,
+        width: _size == 's' ? 73 : _size == 'm' ? 117 : 300,
         alignment: Alignment.center,
         padding: EdgeInsets.only(bottom: 5),
         child: Column(
           children: <Widget>[
             Container(
               height: 50,
-              width: _size == 's' ? 100 : _size == 'm' ? 120 : 250,
+              width: _size == 's' ? 83 : _size == 'm' ? 120 : 250,
               alignment: Alignment.center,
               child: Text(
                 _title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: _size == 's' ? 16 : _size == 'm' ? 20 : 40,
+                  fontSize: _size == 's' ? 14 : _size == 'm' ? 20 : 40,
                   color: Colors.grey,
                 ),
               ),
