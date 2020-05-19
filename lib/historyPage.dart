@@ -26,13 +26,21 @@ class HistoryPage extends StatelessWidget {
                     ', ' +
                     DateFormat.Hm().format(history[index].start) +
                     ' - ' +
-                    DateFormat.Hm().format(history[index].end),
+                    DateFormat.Hm().format(history[index].end) +
+                    ' (' +
+                    history[index].totalWorkdayDuration.inHours.toString() +
+                    ':' +
+                    (history[index].totalWorkdayDuration.inMinutes % 60)
+                        .toString() +
+                    'h)',
               ),
               Row(
                 children: <Widget>[
-                  TimeDisplay('Breaks', history[index].totalBreaksDuration, 's'),
+                  TimeDisplay(
+                      'Breaks', history[index].totalBreaksDuration, 's'),
                   TimeDisplay('Tracked Time', history[index].trackedTime, 's'),
-                  TimeDisplay('Unproductive Time', history[index].unproductiveTime, 's'),
+                  TimeDisplay('Unproductive Time',
+                      history[index].unproductiveTime, 's'),
                   TimeDisplay('Worked Time', history[index].workedTime, 's'),
                 ],
               ),
