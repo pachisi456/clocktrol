@@ -50,7 +50,7 @@ class _ClocktrolState extends State<Clocktrol> {
       if (all[all.length - 1].start.isAfter(DateTime(now.year, now.month, now.day))) {
         all.removeLast();
       }
-      setState(() => _history = all);
+      setState(() => _history = all.reversed.toList());
     });
     super.initState();
   }
