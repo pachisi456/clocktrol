@@ -45,7 +45,13 @@ class _ClocktrolState extends State<Clocktrol> {
 
   @override
   void initState() {
-    getAll().then((all) => setState(() => _history = all));
+    getAll().then((all) {
+      DateTime now = DateTime.now();
+      if (all[all.length - 1].start.isAfter(DateTime(now.year, now.month, now.day))) {
+        all.removeLast();
+      }
+      setState(() => _history = all);
+    });
     super.initState();
   }
 
