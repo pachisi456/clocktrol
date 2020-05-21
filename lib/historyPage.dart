@@ -15,50 +15,57 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      separatorBuilder: (context, index) => Divider(
-        indent: 15,
-        endIndent: 15,
-        thickness: 1,
-      ),
-      itemCount: history.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                DateFormat.yMMMMEEEEd().format(history[index].start) +
-                    ', ' +
-                    DateFormat.Hm().format(history[index].start) +
-                    ' - ' +
-                    DateFormat.Hm().format(history[index].end) +
-                    ' (' +
-                    history[index].totalWorkdayDuration.inHours.toString() +
-                    ':' +
-                    (history[index].totalWorkdayDuration.inMinutes % 60)
-                        .toString() +
-                    'h)',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+    return history == null || history.length <= 0
+        ? Container(child: Text('No items.'))
+        : ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              indent: 15,
+              endIndent: 15,
+              thickness: 1,
+            ),
+            itemCount: history.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      DateFormat.yMMMMEEEEd().format(history[index].start) +
+                          ', ' +
+                          DateFormat.Hm().format(history[index].start) +
+                          ' - ' +
+                          DateFormat.Hm().format(history[index].end) +
+                          ' (' +
+                          history[index]
+                              .totalWorkdayDuration
+                              .inHours
+                              .toString() +
+                          ':' +
+                          (history[index].totalWorkdayDuration.inMinutes % 60)
+                              .toString() +
+                          'h)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TimeDisplay('Total Breaks',
+                            history[index].totalBreaksDuration, 's'),
+                        TimeDisplay(
+                            'Tracked Time', history[index].trackedTime, 's'),
+                        TimeDisplay('Unprod. Time',
+                            history[index].unproductiveTime, 's'),
+                        TimeDisplay(
+                            'Worked Time', history[index].workedTime, 's'),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  TimeDisplay(
-                      'Total Breaks', history[index].totalBreaksDuration, 's'),
-                  TimeDisplay('Tracked Time', history[index].trackedTime, 's'),
-                  TimeDisplay(
-                      'Unprod. Time', history[index].unproductiveTime, 's'),
-                  TimeDisplay('Worked Time', history[index].workedTime, 's'),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }
