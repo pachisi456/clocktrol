@@ -1,10 +1,10 @@
 import 'package:clocktrol/firebase.dart';
-import 'package:clocktrol/historyPage.dart';
+import 'package:clocktrol/history_page.dart';
 import 'package:clocktrol/workday.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:clocktrol/track-page.dart';
+import 'package:clocktrol/track_page.dart';
 
 Future main() async {
   await DotEnv().load('.env');

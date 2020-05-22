@@ -1,4 +1,4 @@
-import 'package:clocktrol/time-display.dart';
+import 'package:clocktrol/time_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';

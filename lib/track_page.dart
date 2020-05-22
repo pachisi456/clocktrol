@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:clocktrol/time-display.dart';
+import 'package:clocktrol/time_display.dart';
 import 'workday.dart';
 import 'firebase.dart';
 
