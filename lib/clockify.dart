@@ -60,7 +60,6 @@ class Clockify {
     int hours = match.group(1) != null ? int.parse(match.group(1)) : 0;
     int minutes = match.group(2) != null ? int.parse(match.group(2)) : 0;
     int seconds = match.group(3) != null ? int.parse(match.group(3)) : 0;
-    // TODO Maybe add rounding, as final number is a bit less than what Clockify UI says.
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
 }

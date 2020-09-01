@@ -14,6 +14,7 @@ class Workday {
   Workday(this.start) {
     if (clockify != null) {
       fetchClockify();
+      // TODO Workday is used a lot of times in places where no fetching is necessary.
       Timer.periodic(Duration(seconds: 2), (Timer t) => fetchClockify());
     }
   }

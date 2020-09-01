@@ -11,11 +11,13 @@ class TrackPage extends StatefulWidget {
 }
 
 class _TrackPageState extends State<TrackPage> {
+  final ClocktrolStore _store = ClocktrolStore(); // TODO Remove when moved to main.dart.
+
   Workday _workday;
 
   @override
   void initState() {
-    getToday().then((Workday today) {
+    _store.getToday().then((Workday today) {
       if (today != null) {
         _setUpWorkday(today);
       }
@@ -102,7 +104,7 @@ class _TrackPageState extends State<TrackPage> {
   void _setUpWorkday([Workday today]) {
     setState(() {
       if (today == null) {
-        _workday = startNewDay();
+        _workday = _store.startNewDay();
       } else {
         _workday = today;
       }
@@ -123,7 +125,7 @@ class _TrackPageState extends State<TrackPage> {
   }
 
   void _updateData() {
-    updateToday(_workday);
+    _store.updateToday(_workday);
     setState(() {});
   }
 }
