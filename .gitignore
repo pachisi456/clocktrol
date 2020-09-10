@@ -9,6 +9,7 @@
 .history
 .svn/
 
+# Project specific files
 .env
 android/app/google-services.json
 
