@@ -12,6 +12,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final ClocktrolStore _store = ClocktrolStore();
   final MaterialColor _primaryColor = Colors.teal;
 
   @override
@@ -27,30 +28,41 @@ class MyApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: Clocktrol(),
+      home: Clocktrol(_store),
     );
   }
 }
 
 class Clocktrol extends StatefulWidget {
-  Clocktrol({Key key}) : super(key: key);
+  Clocktrol(this._store, {Key key}) : super(key: key);
+
+  final ClocktrolStore _store;
 
   @override
-  _ClocktrolState createState() => _ClocktrolState();
+  ClocktrolState createState() => ClocktrolState();
 }
 
-class _ClocktrolState extends State<Clocktrol> {
+class ClocktrolState extends State<Clocktrol> {
   int _selectedIndex = 0;
-  List<Workday> _history;
+  @visibleForTesting
+  List<Workday> history;
+  @visibleForTesting
+  Workday today;
 
   @override
   void initState() {
-    getAll().then((all) {
-      DateTime now = DateTime.now();
-      if (all[all.length - 1].start.isAfter(DateTime(now.year, now.month, now.day))) {
-        all.removeLast();
+    widget._store.getAll().then((all) {
+      if (all.length > 0) {
+        DateTime now = DateTime.now();
+        setState(() {
+          if (all[all.length - 1]
+              .start
+              .isAfter(DateTime(now.year, now.month, now.day))) {
+            today = all.removeLast();
+          }
+          history = all.reversed.toList();
+        });
       }
-      setState(() => _history = all.reversed.toList());
     });
     super.initState();
   }
@@ -70,7 +82,7 @@ class _ClocktrolState extends State<Clocktrol> {
       body: Center(
         child: <Widget>[
           HistoryPage(
-            history: _history,
+            history: history,
           ),
           TrackPage(),
         ].elementAt(_selectedIndex),

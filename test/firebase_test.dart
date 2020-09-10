@@ -15,9 +15,11 @@ class DocumentSnapshotMock extends Mock implements DocumentSnapshot {
 }
 
 void main() {
+  final _store = ClocktrolStore();
+
   test('parseWorkday() should return null on empty DocumentSnapshot', () {
     final ds = DocumentSnapshotMock();
-    expect(parseWorkday(ds), null);
+    expect(_store.parseWorkday(ds), null);
   });
 
   test('Started workday should be parsed correctly', () {
@@ -26,7 +28,7 @@ void main() {
       'start': Timestamp.fromMillisecondsSinceEpoch(start),
     });
 
-    Workday workday = parseWorkday(ds);
+    Workday workday = _store.parseWorkday(ds);
     expect(workday.start.millisecondsSinceEpoch, start);
   });
 
@@ -55,7 +57,7 @@ void main() {
       'end': Timestamp.fromMillisecondsSinceEpoch(end)
     });
 
-    Workday workday = parseWorkday(ds);
+    Workday workday = _store.parseWorkday(ds);
     expect(workday.start.millisecondsSinceEpoch, start);
     expect(workday.trackedTime.inMinutes, 90);
     expect(workday.breaks[0].start.millisecondsSinceEpoch, breakOneStart);
