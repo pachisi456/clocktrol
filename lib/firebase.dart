@@ -7,15 +7,6 @@ import 'package:clocktrol/workday.dart';
 class ClocktrolStore {
   final collection = 'workdays';
 
-  // Get today's Workday from Firebase if existent, otherwise return null.
-  Future<Workday> getToday() async {
-    DocumentSnapshot today = await Firestore.instance
-        .collection(collection)
-        .document(DateFormat('yyyy-MM-dd').format(DateTime.now()))
-        .get();
-    return parseWorkday(today);
-  }
-
   // Write a newly created Workday starting now to Firebase and return it.
   Workday startNewDay() {
     Workday today = Workday(DateTime.now());

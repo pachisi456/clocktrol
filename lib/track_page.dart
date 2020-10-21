@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 import 'package:clocktrol/time_display.dart';
 import 'workday.dart';
-import 'firebase.dart';
 
-class TrackPage extends StatefulWidget {
-  @override
-  _TrackPageState createState() => _TrackPageState();
-}
+class TrackPage extends StatelessWidget {
+  const TrackPage({
+    Key key,
+    this.history,
+    this.workday,
+    this.setUpWorkday,
+    this.stopOrContinueWorkday,
+  }) : super(key: key);
 
-class _TrackPageState extends State<TrackPage> {
-  final ClocktrolStore _store = ClocktrolStore(); // TODO Remove when moved to main.dart.
-
-  Workday _workday;
-
-  @override
-  void initState() {
-    _store.getToday().then((Workday today) {
-      if (today != null) {
-        _setUpWorkday(today);
-      }
-    });
-    super.initState();
-  }
+  final List<Workday> history;
+  final Workday workday;
+  final VoidCallback setUpWorkday;
+  final VoidCallback stopOrContinueWorkday;
 
   @override
   Widget build(BuildContext context) {
-    if (_workday == null) {
+    if (workday == null) {
       return _buildPristine();
     } else {
       return _buildStarted();
@@ -50,7 +42,7 @@ class _TrackPageState extends State<TrackPage> {
         ),
         RaisedButton(
           onPressed: () {
-            _setUpWorkday();
+            setUpWorkday();
           },
           child: Text(
             'Start workday now',
@@ -67,24 +59,24 @@ class _TrackPageState extends State<TrackPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('Start', _workday.start),
-            TimeDisplay('Breaks', _workday.totalBreaksDuration),
-            TimeDisplay('End', _workday.end)
+            TimeDisplay('Start', workday.start),
+            TimeDisplay('Breaks', workday.totalBreaksDuration),
+            TimeDisplay('End', workday.end)
           ]),
           SizedBox(height: 50),
-          TimeDisplay('Hours worked', _workday.workedTime, 'l'),
+          TimeDisplay('Hours worked', workday.workedTime, 'l'),
           SizedBox(height: 50),
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('tracked time', _workday.trackedTime),
-            TimeDisplay('unproductive time', _workday.unproductiveTime)
+            TimeDisplay('tracked time', workday.trackedTime),
+            TimeDisplay('unproductive time', workday.unproductiveTime)
           ]),
           SizedBox(height: 50),
           RaisedButton(
             onPressed: () {
-              _stopOrContinueWorkday();
+              stopOrContinueWorkday();
             },
             child: Text(
-              _workday.isPausedOrEnded ? 'Continue working' : 'Stop working',
+              workday.isPausedOrEnded ? 'Continue working' : 'Stop working',
               style: TextStyle(fontSize: 26),
             ),
           ),
@@ -99,33 +91,5 @@ class _TrackPageState extends State<TrackPage> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: children,
     );
-  }
-
-  void _setUpWorkday([Workday today]) {
-    setState(() {
-      if (today == null) {
-        _workday = _store.startNewDay();
-      } else {
-        _workday = today;
-      }
-    });
-    Timer.periodic(Duration(seconds: 2), (Timer t) => _updateData());
-  }
-
-  void _stopOrContinueWorkday() {
-    if (!_workday.isPausedOrEnded) {
-      // Assume workday is ended.
-      _workday.end = DateTime.now();
-    } else {
-      // Add break, from end to now and reset end.
-      _workday.breaks.add(Break(_workday.end, DateTime.now()));
-      _workday.end = null;
-    }
-    _updateData();
-  }
-
-  void _updateData() {
-    _store.updateToday(_workday);
-    setState(() {});
   }
 }

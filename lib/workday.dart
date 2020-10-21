@@ -12,9 +12,9 @@ class Workday {
   Duration trackedTime = Duration();
 
   Workday(this.start) {
-    if (clockify != null) {
+    final now = DateTime.now();
+    if (start == DateTime(now.year, now.month, now.day) && clockify != null) {
       fetchClockify();
-      // TODO Workday is used a lot of times in places where no fetching is necessary.
       Timer.periodic(Duration(seconds: 2), (Timer t) => fetchClockify());
     }
   }
