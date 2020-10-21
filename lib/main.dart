@@ -1,10 +1,11 @@
-import 'package:clocktrol/firebase.dart';
-import 'package:clocktrol/history_page.dart';
-import 'package:clocktrol/workday.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:clocktrol/firebase.dart';
+import 'package:clocktrol/history_page.dart';
 import 'package:clocktrol/track_page.dart';
+import 'package:clocktrol/workday.dart';
 
 Future main() async {
   await DotEnv().load('.env');
@@ -84,7 +85,18 @@ class ClocktrolState extends State<Clocktrol> {
           HistoryPage(
             history: history,
           ),
-          TrackPage(),
+          TrackPage(
+            history: history,
+            workday: today,
+            // setUpWorkday: _setUpWorkday(),
+            setUpWorkday: () {
+              _setUpWorkday();
+            },
+            // stopOrContinueWorkday: _stopOrContinueWorkday(),
+            stopOrContinueWorkday: () {
+              _stopOrContinueWorkday();
+            },
+          ),
         ].elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -102,5 +114,29 @@ class ClocktrolState extends State<Clocktrol> {
         onTap: _onTabSwitch,
       ),
     );
+  }
+
+  void _setUpWorkday([Workday wd]) {
+    setState(() {
+        today = widget._store.startNewDay();
+    });
+    Timer.periodic(Duration(seconds: 2), (Timer t) => _updateData());
+  }
+
+  void _stopOrContinueWorkday() {
+    if (!today.isPausedOrEnded) {
+      // Assume workday is ended.
+      today.end = DateTime.now();
+    } else {
+      // Add break, from end to now and reset end.
+      today.breaks.add(Break(today.end, DateTime.now()));
+      today.end = null;
+    }
+    _updateData();
+  }
+
+  void _updateData() {
+    widget._store.updateToday(today);
+    setState(() {});
   }
 }
