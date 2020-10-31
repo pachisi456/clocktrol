@@ -33,7 +33,7 @@ class TrackPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 4),
           child: Text(
-            'You haven\'t started your worday yet.',
+            'You haven\'t started your workday yet.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 34,
