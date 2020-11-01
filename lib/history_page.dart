@@ -29,43 +29,39 @@ class HistoryPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      DateFormat.yMMMMEEEEd().format(history[index].start) +
-                          ', ' +
-                          DateFormat.Hm().format(history[index].start) +
-                          ' - ' +
-                          DateFormat.Hm().format(history[index].end) +
-                          ' (' +
-                          history[index]
-                              .totalWorkdayDuration
-                              .inHours
-                              .toString() +
-                          ':' +
-                          (history[index].totalWorkdayDuration.inMinutes % 60)
-                              .toString() +
-                          'h)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TimeDisplay('Total Breaks',
-                            history[index].totalBreaksDuration, 's'),
-                        TimeDisplay(
-                            'Tracked Time', history[index].trackedTime, 's'),
-                        TimeDisplay('Unprod. Time',
-                            history[index].unproductiveTime, 's'),
-                        TimeDisplay(
-                            'Worked Time', history[index].workedTime, 's'),
-                      ],
-                    ),
-                  ],
+                  children: _historyRow(history[index]),
                 ),
               );
             },
           );
+  }
+
+  List<Widget> _historyRow(Workday workday) {
+    return <Widget>[
+      Text(
+        DateFormat.yMMMMEEEEd().format(workday.start) +
+            ', ' +
+            DateFormat.Hm().format(workday.start) +
+            ' - ' +
+            DateFormat.Hm().format(workday.end) +
+            ' (' +
+            workday.totalWorkdayDuration.inHours.toString() +
+            ':' +
+            (workday.totalWorkdayDuration.inMinutes % 60).toString() +
+            'h)',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          TimeDisplay('Total Breaks', workday.totalBreaksDuration, 's'),
+          TimeDisplay('Tracked Time', workday.trackedTime, 's'),
+          TimeDisplay('Unprod. Time', workday.unproductiveTime, 's'),
+          TimeDisplay('Worked Time', workday.workedTime, 's'),
+        ],
+      ),
+    ];
   }
 }
