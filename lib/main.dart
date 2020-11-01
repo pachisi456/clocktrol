@@ -88,14 +88,8 @@ class ClocktrolState extends State<Clocktrol> {
           TrackPage(
             history: history,
             workday: today,
-            // setUpWorkday: _setUpWorkday(),
-            setUpWorkday: () {
-              _setUpWorkday();
-            },
-            // stopOrContinueWorkday: _stopOrContinueWorkday(),
-            stopOrContinueWorkday: () {
-              _stopOrContinueWorkday();
-            },
+            setUpWorkday: () => _setUpWorkday(),
+            stopOrContinueWorkday: () => _stopOrContinueWorkday(),
           ),
         ].elementAt(_selectedIndex),
       ),
