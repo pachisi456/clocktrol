@@ -51,6 +51,7 @@ class ClocktrolState extends State<Clocktrol> {
   List<Workday> history;
   @visibleForTesting
   Workday today;
+  @visibleForTesting
   bool percentageMode = false;
 
   @override
@@ -116,20 +117,12 @@ class ClocktrolState extends State<Clocktrol> {
       ),
       body: Center(
         child: <Widget>[
-          HistoryPage(
-            history: history,
-          ),
+          HistoryPage(percentageMode, history),
           TrackPage(
-            history: history,
-            workday: today,
-            // setUpWorkday: _setUpWorkday(),
-            setUpWorkday: () {
-              _setUpWorkday();
-            },
-            // stopOrContinueWorkday: _stopOrContinueWorkday(),
-            stopOrContinueWorkday: () {
-              _stopOrContinueWorkday();
-            },
+            percentageMode,
+            today,
+            () => _setUpWorkday(),
+            () => _stopOrContinueWorkday(),
           ),
         ].elementAt(_selectedIndex),
       ),

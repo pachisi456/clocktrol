@@ -6,16 +6,15 @@ import 'package:intl/intl.dart';
 import 'workday.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({
-    Key key,
-    this.history,
-  }) : super(key: key);
+  const HistoryPage(this._percentageMode, this._history, {Key key})
+      : super(key: key);
 
-  final List<Workday> history;
+  final List<Workday> _history;
+  final bool _percentageMode;
 
   @override
   Widget build(BuildContext context) {
-    return history == null || history.length <= 0
+    return _history == null || _history.length <= 0
         ? Container(child: Text('No items.'))
         : ListView.separated(
             separatorBuilder: (context, index) => Divider(
@@ -23,13 +22,13 @@ class HistoryPage extends StatelessWidget {
               endIndent: 15,
               thickness: 1,
             ),
-            itemCount: history.length,
+            itemCount: _history.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: _historyRow(history[index]),
+                  children: _historyRow(_history[index]),
                 ),
               );
             },
@@ -56,10 +55,13 @@ class HistoryPage extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          TimeDisplay('Total Breaks', workday.totalBreaksDuration, 's'),
-          TimeDisplay('Tracked Time', workday.trackedTime, 's'),
-          TimeDisplay('Unprod. Time', workday.unproductiveTime, 's'),
-          TimeDisplay('Worked Time', workday.workedTime, 's'),
+          TimeDisplay('Total Breaks', _percentageMode,
+              workday.totalBreaksDuration, 's'),
+          TimeDisplay(
+              'Tracked Time', _percentageMode, workday.trackedTime, 's'),
+          TimeDisplay(
+              'Unprod. Time', _percentageMode, workday.unproductiveTime, 's'),
+          TimeDisplay('Worked Time', _percentageMode, workday.workedTime, 's'),
         ],
       ),
     ];

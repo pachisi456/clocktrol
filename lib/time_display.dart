@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 
 class TimeDisplay extends StatelessWidget {
   final String _title;
+  final bool _percentage;
   DateTime _time;
   Duration _duration;
-  String _size; // 's', 'm' or 'b'.
+  String _size; // 's', 'm' or 'l'.
 
-  TimeDisplay(this._title, dynamic timeOrDuration, [String size]) {
+  TimeDisplay(this._title, this._percentage, dynamic timeOrDuration,
+      [String size]) {
     if (timeOrDuration is DateTime) {
       _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
