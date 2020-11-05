@@ -4,22 +4,22 @@ import 'package:clocktrol/time_display.dart';
 import 'workday.dart';
 
 class TrackPage extends StatelessWidget {
-  const TrackPage({
+  const TrackPage(
+    this._percentageMode,
+    this._workday,
+    this._setUpWorkday,
+    this._stopOrContinueWorkday, {
     Key key,
-    this.history,
-    this.workday,
-    this.setUpWorkday,
-    this.stopOrContinueWorkday,
   }) : super(key: key);
 
-  final List<Workday> history;
-  final Workday workday;
-  final VoidCallback setUpWorkday;
-  final VoidCallback stopOrContinueWorkday;
+  final bool _percentageMode;
+  final Workday _workday;
+  final VoidCallback _setUpWorkday;
+  final VoidCallback _stopOrContinueWorkday;
 
   @override
   Widget build(BuildContext context) {
-    if (workday == null) {
+    if (_workday == null) {
       return _buildPristine();
     } else {
       return _buildStarted();
@@ -42,7 +42,7 @@ class TrackPage extends StatelessWidget {
         ),
         RaisedButton(
           onPressed: () {
-            setUpWorkday();
+            _setUpWorkday();
           },
           child: Text(
             'Start workday now',
@@ -59,24 +59,31 @@ class TrackPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('Start', workday.start),
-            TimeDisplay('Breaks', workday.totalBreaksDuration),
-            TimeDisplay('End', workday.end)
+            TimeDisplay('Start', _percentageMode, _workday.start,
+                totalWorkday: _workday.totalWorkdayDuration),
+            TimeDisplay('Breaks', _percentageMode, _workday.totalBreaksDuration,
+                totalWorkday: _workday.totalWorkdayDuration),
+            TimeDisplay('End', _percentageMode, _workday.end,
+                totalWorkday: _workday.totalWorkdayDuration)
           ]),
           SizedBox(height: 50),
-          TimeDisplay('Hours worked', workday.workedTime, 'l'),
+          TimeDisplay('Hours worked', _percentageMode, _workday.workedTime,
+              totalWorkday: _workday.totalWorkdayDuration, size: 'l'),
           SizedBox(height: 50),
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('tracked time', workday.trackedTime),
-            TimeDisplay('unproductive time', workday.unproductiveTime)
+            TimeDisplay('tracked time', _percentageMode, _workday.trackedTime,
+                totalWorkday: _workday.totalWorkdayDuration),
+            TimeDisplay(
+                'unproductive time', _percentageMode, _workday.unproductiveTime,
+                totalWorkday: _workday.totalWorkdayDuration)
           ]),
           SizedBox(height: 50),
           RaisedButton(
             onPressed: () {
-              stopOrContinueWorkday();
+              _stopOrContinueWorkday();
             },
             child: Text(
-              workday.isPausedOrEnded ? 'Continue working' : 'Stop working',
+              _workday.isPausedOrEnded ? 'Continue working' : 'Stop working',
               style: TextStyle(fontSize: 26),
             ),
           ),

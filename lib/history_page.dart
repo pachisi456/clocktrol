@@ -6,16 +6,15 @@ import 'package:intl/intl.dart';
 import 'workday.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({
-    Key key,
-    this.history,
-  }) : super(key: key);
+  const HistoryPage(this._percentageMode, this._history, {Key key})
+      : super(key: key);
 
-  final List<Workday> history;
+  final List<Workday> _history;
+  final bool _percentageMode;
 
   @override
   Widget build(BuildContext context) {
-    return history == null || history.length <= 0
+    return _history == null || _history.length <= 0
         ? Container(child: Text('No items.'))
         : ListView.separated(
             separatorBuilder: (context, index) => Divider(
@@ -23,49 +22,50 @@ class HistoryPage extends StatelessWidget {
               endIndent: 15,
               thickness: 1,
             ),
-            itemCount: history.length,
+            itemCount: _history.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      DateFormat.yMMMMEEEEd().format(history[index].start) +
-                          ', ' +
-                          DateFormat.Hm().format(history[index].start) +
-                          ' - ' +
-                          DateFormat.Hm().format(history[index].end) +
-                          ' (' +
-                          history[index]
-                              .totalWorkdayDuration
-                              .inHours
-                              .toString() +
-                          ':' +
-                          (history[index].totalWorkdayDuration.inMinutes % 60)
-                              .toString() +
-                          'h)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TimeDisplay('Total Breaks',
-                            history[index].totalBreaksDuration, 's'),
-                        TimeDisplay(
-                            'Tracked Time', history[index].trackedTime, 's'),
-                        TimeDisplay('Unprod. Time',
-                            history[index].unproductiveTime, 's'),
-                        TimeDisplay(
-                            'Worked Time', history[index].workedTime, 's'),
-                      ],
-                    ),
-                  ],
+                  children: _historyRow(_history[index]),
                 ),
               );
             },
           );
+  }
+
+  List<Widget> _historyRow(Workday workday) {
+    return <Widget>[
+      Text(
+        DateFormat.yMMMMEEEEd().format(workday.start) +
+            ', ' +
+            DateFormat.Hm().format(workday.start) +
+            ' - ' +
+            DateFormat.Hm().format(workday.end) +
+            ' (' +
+            workday.totalWorkdayDuration.inHours.toString() +
+            ':' +
+            (workday.totalWorkdayDuration.inMinutes % 60).toString() +
+            'h)',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          TimeDisplay(
+              'Total Breaks', _percentageMode, workday.totalBreaksDuration,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Tracked Time', _percentageMode, workday.trackedTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Unprod. Time', _percentageMode, workday.unproductiveTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Worked Time', _percentageMode, workday.workedTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+        ],
+      ),
+    ];
   }
 }

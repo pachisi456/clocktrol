@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TimeDisplay extends StatelessWidget {
-  final String _title;
-  DateTime _time;
-  Duration _duration;
-  String _size; // 's', 'm' or 'b'.
-
-  TimeDisplay(this._title, dynamic timeOrDuration, [String size]) {
+  TimeDisplay(
+    this._title,
+    percentageMode,
+    dynamic timeOrDuration, {
+    @required Duration this.totalWorkday,
+    String size,
+  }) {
     if (timeOrDuration is DateTime) {
       _time = timeOrDuration;
     } else if (timeOrDuration is Duration) {
@@ -16,8 +16,23 @@ class TimeDisplay extends StatelessWidget {
       throw ArgumentError(
           'timeOrDuration parameter passed to TimeDisplay is not of DateTime nor of Duration type.');
     }
+
+    // Sanity check for percentage mode, otherwise fall back to displaying time.
+    if (percentageMode && totalWorkday != null && _duration != null) {
+      _percentageMode = percentageMode;
+    } else {
+      _percentageMode = false;
+    }
+
     _size = size == null ? 'm' : size;
   }
+
+  final String _title;
+  bool _percentageMode;
+  final Duration totalWorkday; // Just needed if _percentageMode == true.
+  DateTime _time;
+  Duration _duration;
+  String _size; // 's', 'm' or 'l'.
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +56,7 @@ class TimeDisplay extends StatelessWidget {
               ),
             ),
             Text(
-              _getString(),
+              _percentageMode ? _buildPercentageString() : _buildTimeString(),
               style: TextStyle(
                 fontSize: _size == 's' ? 18 : _size == 'm' ? 28 : 56,
                 fontWeight: FontWeight.bold,
@@ -51,7 +66,7 @@ class TimeDisplay extends StatelessWidget {
         ));
   }
 
-  String _getString() {
+  String _buildTimeString() {
     // TODO Consider using DateFormat.
     if (_time != null) {
       return '${_prependZero(_time.hour.toString())}:${_prependZero(_time.minute.toString())}';
@@ -59,6 +74,12 @@ class TimeDisplay extends StatelessWidget {
       return '${_duration.inHours.toString()}:${_prependZero((_duration.inMinutes % 60).toString())}';
     }
     return '--:--';
+  }
+
+  String _buildPercentageString() {
+    int percentage =
+        (_duration.inSeconds / totalWorkday.inSeconds * 100).round();
+    return '${percentage.toString()}%';
   }
 
   String _prependZero(String val) {

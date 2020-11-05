@@ -7,6 +7,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:clocktrol/main.dart';
 import 'package:clocktrol/workday.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClocktrolStoreMock extends Mock implements ClocktrolStore {}
 
@@ -30,66 +31,119 @@ void main() {
     expect(find.byType(BottomNavigationBar), findsOneWidget);
   });
 
-  testWidgets('Testing Main State with empty history',
-      (WidgetTester tester) async {
-    final storeMock = ClocktrolStoreMock();
-    when(storeMock.getAll()).thenAnswer((_) async => []);
+  group('State', () {
+    testWidgets('Testing Main State with empty history',
+        (WidgetTester tester) async {
+      final storeMock = ClocktrolStoreMock();
+      when(storeMock.getAll()).thenAnswer((_) async => []);
 
-    await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+      await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
 
-    final ClocktrolState state = tester.state(find.byType(Clocktrol));
-    expect(state.history, null);
-    expect(state.today, null);
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      expect(state.history, null);
+      expect(state.today, null);
+    });
+
+    testWidgets('Testing Main State with today and empty history',
+        (WidgetTester tester) async {
+      final storeMock = ClocktrolStoreMock();
+      when(storeMock.getAll()).thenAnswer((_) async => [today]);
+
+      await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      expect(state.history, []);
+      expect(state.today, today);
+    });
+
+    testWidgets('Testing Main State with today and history',
+        (WidgetTester tester) async {
+      final storeMock = ClocktrolStoreMock();
+      when(storeMock.getAll()).thenAnswer((_) async => [workday1, today]);
+
+      await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      expect(state.history.length, 1);
+      expect(state.today, today);
+    });
+
+    testWidgets('Testing Main State with one history item',
+        (WidgetTester tester) async {
+      final storeMock = ClocktrolStoreMock();
+
+      when(storeMock.getAll()).thenAnswer((_) async => [workday1]);
+
+      await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      expect(state.history.length, 1);
+      expect(state.today, null);
+    });
+
+    testWidgets('Testing Main State with many history items',
+        (WidgetTester tester) async {
+      final storeMock = ClocktrolStoreMock();
+      when(storeMock.getAll())
+          .thenAnswer((_) async => [workday1, workday2, workday3, today]);
+
+      await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      expect(state.history.length, 3);
+      expect(state.today, today);
+    });
   });
 
-  testWidgets('Testing Main State with today and empty history',
-      (WidgetTester tester) async {
-    final storeMock = ClocktrolStoreMock();
-    when(storeMock.getAll()).thenAnswer((_) async => [today]);
+  ClocktrolStoreMock storeMock;
+  group('Persistent State', () {
+    Widget _getTestableClocktrolWithEmptyStoremock() {
+      storeMock = ClocktrolStoreMock();
+      when(storeMock.getAll()).thenAnswer((_) async => []);
+      return buildTestableWidget(Clocktrol(storeMock));
+    }
 
-    await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+    testWidgets('Testing not set percentage mode.',
+        (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({});
+      await tester.pumpWidget(_getTestableClocktrolWithEmptyStoremock());
 
-    final ClocktrolState state = tester.state(find.byType(Clocktrol));
-    expect(state.history, []);
-    expect(state.today, today);
-  });
+      final Finder switchFinder = find.byType(Switch);
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      final Switch percentSwitch = tester.widget(switchFinder);
 
-  testWidgets('Testing Main State with today and history',
-      (WidgetTester tester) async {
-    final storeMock = ClocktrolStoreMock();
-    when(storeMock.getAll()).thenAnswer((_) async => [workday1, today]);
+      expect(state.percentageMode, false);
+      expect(switchFinder, findsOneWidget);
+      expect(percentSwitch.value, false);
+    });
 
-    await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+    testWidgets('Testing time mode.', (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({'percentageMode': false});
+      await tester.pumpWidget(_getTestableClocktrolWithEmptyStoremock());
 
-    final ClocktrolState state = tester.state(find.byType(Clocktrol));
-    expect(state.history.length, 1);
-    expect(state.today, today);
-  });
+      final Finder switchFinder = find.byType(Switch);
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      final Switch percentSwitch = tester.widget(switchFinder);
 
-  testWidgets('Testing Main State with one history item',
-      (WidgetTester tester) async {
-    final storeMock = ClocktrolStoreMock();
+      expect(state.percentageMode, false);
+      expect(switchFinder, findsOneWidget);
+      expect(percentSwitch.value, false);
+    });
 
-    when(storeMock.getAll()).thenAnswer((_) async => [workday1]);
+    testWidgets('Testing percentage mode.', (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({'percentageMode': true});
+      await tester.pumpWidget(_getTestableClocktrolWithEmptyStoremock());
+      await tester.pumpAndSettle(Duration(seconds: 1)); // Waiting for second
+      // build after SharedPreferences have loaded.
 
-    await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
+      final Finder switchFinder = find.byType(Switch);
+      final ClocktrolState state = tester.state(find.byType(Clocktrol));
+      final Switch percentSwitch = tester.widget(switchFinder);
 
-    final ClocktrolState state = tester.state(find.byType(Clocktrol));
-    expect(state.history.length, 1);
-    expect(state.today, null);
-  });
-
-  testWidgets('Testing Main State with many history items',
-      (WidgetTester tester) async {
-    final storeMock = ClocktrolStoreMock();
-    when(storeMock.getAll())
-        .thenAnswer((_) async => [workday1, workday2, workday3, today]);
-
-    await tester.pumpWidget(buildTestableWidget(Clocktrol(storeMock)));
-
-    final ClocktrolState state = tester.state(find.byType(Clocktrol));
-    expect(state.history.length, 3);
-    expect(state.today, today);
+      expect(state.percentageMode, true);
+      expect(switchFinder, findsOneWidget);
+      expect(percentSwitch.value, true);
+    });
   });
 }
 

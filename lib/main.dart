@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -6,6 +7,7 @@ import 'package:clocktrol/firebase.dart';
 import 'package:clocktrol/history_page.dart';
 import 'package:clocktrol/track_page.dart';
 import 'package:clocktrol/workday.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
   await DotEnv().load('.env');
@@ -49,9 +51,19 @@ class ClocktrolState extends State<Clocktrol> {
   List<Workday> history;
   @visibleForTesting
   Workday today;
+  @visibleForTesting
+  bool percentageMode = false;
 
   @override
   void initState() {
+    // Load persistent data from disk.
+    SharedPreferences.getInstance().then((prefs) {
+      if (prefs.getBool('percentageMode') ?? false != percentageMode) {
+        setState(() => percentageMode = true);
+      }
+    });
+
+    // Load clockify data.
     widget._store.getAll().then((all) {
       if (all.length > 0) {
         DateTime now = DateTime.now();
@@ -76,20 +88,41 @@ class ClocktrolState extends State<Clocktrol> {
 
   @override
   Widget build(BuildContext context) {
+    const _switchColor = Colors.white;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Clocktrol'),
+        actions: <Widget>[
+          Icon(Icons.schedule),
+          Switch(
+            value: percentageMode,
+            onChanged: _togglePercentageMode,
+            inactiveThumbColor: _switchColor,
+            activeColor: _switchColor,
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 17),
+            child: Center(
+              child: Text(
+                '%',
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ],
       ),
       body: Center(
         child: <Widget>[
-          HistoryPage(
-            history: history,
-          ),
+          HistoryPage(percentageMode, history),
           TrackPage(
-            history: history,
-            workday: today,
-            setUpWorkday: () => _setUpWorkday(),
-            stopOrContinueWorkday: () => _stopOrContinueWorkday(),
+            percentageMode,
+            today,
+            () => _setUpWorkday(),
+            () => _stopOrContinueWorkday(),
           ),
         ].elementAt(_selectedIndex),
       ),
@@ -110,9 +143,17 @@ class ClocktrolState extends State<Clocktrol> {
     );
   }
 
+  void _togglePercentageMode(toggled) async {
+    setState(() {
+      percentageMode = toggled;
+    });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('percentageMode', toggled);
+  }
+
   void _setUpWorkday([Workday wd]) {
     setState(() {
-        today = widget._store.startNewDay();
+      today = widget._store.startNewDay();
     });
     Timer.periodic(Duration(seconds: 2), (Timer t) => _updateData());
   }
