@@ -55,13 +55,15 @@ class HistoryPage extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          TimeDisplay('Total Breaks', _percentageMode,
-              workday.totalBreaksDuration, 's'),
           TimeDisplay(
-              'Tracked Time', _percentageMode, workday.trackedTime, 's'),
-          TimeDisplay(
-              'Unprod. Time', _percentageMode, workday.unproductiveTime, 's'),
-          TimeDisplay('Worked Time', _percentageMode, workday.workedTime, 's'),
+              'Total Breaks', _percentageMode, workday.totalBreaksDuration,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Tracked Time', _percentageMode, workday.trackedTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Unprod. Time', _percentageMode, workday.unproductiveTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
+          TimeDisplay('Worked Time', _percentageMode, workday.workedTime,
+              totalWorkday: workday.totalWorkdayDuration, size: 's'),
         ],
       ),
     ];

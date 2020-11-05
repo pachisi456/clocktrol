@@ -59,17 +59,23 @@ class TrackPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('Start', _percentageMode, _workday.start),
-            TimeDisplay('Breaks', _percentageMode, _workday.totalBreaksDuration),
-            TimeDisplay('End', _percentageMode, _workday.end)
+            TimeDisplay('Start', _percentageMode, _workday.start,
+                totalWorkday: _workday.totalWorkdayDuration),
+            TimeDisplay('Breaks', _percentageMode, _workday.totalBreaksDuration,
+                totalWorkday: _workday.totalWorkdayDuration),
+            TimeDisplay('End', _percentageMode, _workday.end,
+                totalWorkday: _workday.totalWorkdayDuration)
           ]),
           SizedBox(height: 50),
-          TimeDisplay('Hours worked', _percentageMode, _workday.workedTime, 'l'),
+          TimeDisplay('Hours worked', _percentageMode, _workday.workedTime,
+              totalWorkday: _workday.totalWorkdayDuration, size: 'l'),
           SizedBox(height: 50),
           _timeDisplayRow(<TimeDisplay>[
-            TimeDisplay('tracked time', _percentageMode, _workday.trackedTime),
+            TimeDisplay('tracked time', _percentageMode, _workday.trackedTime,
+                totalWorkday: _workday.totalWorkdayDuration),
             TimeDisplay(
-                'unproductive time', _percentageMode, _workday.unproductiveTime)
+                'unproductive time', _percentageMode, _workday.unproductiveTime,
+                totalWorkday: _workday.totalWorkdayDuration)
           ]),
           SizedBox(height: 50),
           RaisedButton(
