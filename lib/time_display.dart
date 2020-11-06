@@ -77,8 +77,10 @@ class TimeDisplay extends StatelessWidget {
   }
 
   String _buildPercentageString() {
-    int percentage =
-        (_duration.inSeconds / totalWorkday.inSeconds * 100).round();
+    int totalWorkdaySeconds = totalWorkday.inSeconds > 0
+        ? totalWorkday.inSeconds
+        : 1; // Prevent division by zero.
+    int percentage = (_duration.inSeconds / totalWorkdaySeconds * 100).round();
     return '${percentage.toString()}%';
   }
 
