@@ -11,12 +11,11 @@ class Workday {
       : null;
   Duration trackedTime = Duration();
 
-  Workday(this.start) {
-    final now = DateTime.now();
-    if (start == DateTime(now.year, now.month, now.day) && clockify != null) {
-      fetchClockify();
-      Timer.periodic(Duration(seconds: 2), (Timer t) => fetchClockify());
-    }
+  Workday(this.start);
+
+  fetchPeriodically() {
+    fetchClockify();
+    Timer.periodic(Duration(seconds: 2), (Timer t) => fetchClockify());
   }
 
   Duration get totalWorkdayDuration {

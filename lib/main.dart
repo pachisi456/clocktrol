@@ -72,6 +72,7 @@ class ClocktrolState extends State<Clocktrol> {
               .start
               .isAfter(DateTime(now.year, now.month, now.day))) {
             today = all.removeLast();
+            today.fetchPeriodically();
           }
           history = all.reversed.toList();
         });
